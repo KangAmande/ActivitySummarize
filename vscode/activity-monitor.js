@@ -17,14 +17,37 @@ function activate(context){
         };
         logActivity(activity);
     });
-}
 
-function deactivate(context){
+    // Monitor command executions
+    vscode.commands.onDidExecuteCommand(command => {
+        const activity = {
+            type: 'command',
+            command: command.command,
+            timestamp: new Date().toISOString()
+        };
+        logActivity(activity);
+    });
+
+    // Monitor active editor changes
+    vscode.window.onDidChangeActiveTextEditor(editor => {
+        if(editor){
+            const activity = {
+                type: 'activeEditorChange',
+                file: editor.document.uri.fsPath,
+                timestamp: new Date().toISOString()
+            };
+            logActivity(activity);
+        }
+    });
 }
 
 function logActivity(activity){
     fs.appendFileSync(activityFile, JSON.stringify(activity) + '\n');
 }
+
+function deactivate(context){
+}
+
 module.exports = {
     activate,
     deactivate
