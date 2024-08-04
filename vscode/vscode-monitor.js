@@ -18,15 +18,22 @@ function activate(context){
         logActivity(activity);
     });
 
-    // Monitor command executions
-    vscode.commands.onDidExecuteCommand(command => {
+    /**
+    Register a command and monitor its execution
+    const disposable = vscode.commands.registerCommand('extension.someCommand', () => {
         const activity = {
             type: 'command',
-            command: command.command,
+            command: 'extension.someCommand',
             timestamp: new Date().toISOString()  // Current timestamp in ISO 8601 format
         };
         logActivity(activity);
     });
+
+    context.subscriptions.push(disposable);
+
+    Make sure to replace 'extension.someCommand' with the actual command you want to monitor. Also, ensure that this command is defined in your package.json under the contributes.commands section.
+
+    */ 
 
     // Monitor active editor changes
     vscode.window.onDidChangeActiveTextEditor(editor => {
@@ -42,7 +49,11 @@ function activate(context){
 }
 
 function logActivity(activity){
-    fs.appendFileSync(activityFile, JSON.stringify(activity) + '\n');
+    fs.appendFile(activityFile, JSON.stringify(activity) + '\n', err => {
+        if (err) {
+            console.error('Failed to log activity:', err);
+        }
+    });
 }
 
 function deactivate(context){

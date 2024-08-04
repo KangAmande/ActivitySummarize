@@ -1,1 +1,4 @@
-vscode/node-modules
+vscode/node_modules
+vscode/vscode_activities.json
+chrome/chrome_activities.json
+activity_summary.txt
