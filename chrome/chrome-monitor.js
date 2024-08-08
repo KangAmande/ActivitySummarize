@@ -36,7 +36,11 @@ async function monitorChrome() {
 }
 
 function logActivity(activity) {
-    fs.appendFileSync(activityFile, JSON.stringify(activity) + '\n');
+    fs.appendFile(activityFile, JSON.stringify(activity) + '\n', err => {
+        if (err) {
+            console.error('Failed to log activity:', err);
+        }
+    });
 }
 
 monitorChrome().catch(err => {
