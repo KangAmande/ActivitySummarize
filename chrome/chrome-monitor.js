@@ -5,15 +5,26 @@ const path = require('path');
 const activityFile = path.join(__dirname, 'chrome_activities.json');
 
 async function monitorChrome() {
-    const client = await CDP();
+    let client;
+    try {
+        client = await CDP();
+        console.log('Connected to Chrome');
+    } catch (err) {
+        console.error('Error connecting to Chrome:', err);
+        return;
+    }
+
     const { Network, Page } = client;
 
     // Enable events
     await Network.enable();
     await Page.enable();
 
+    console.log('Monitoring Chrome activities...');
+
     // Monitor network requests
     Network.requestWillBeSent(params => {
+        console.log('Network request:', params.request.url);
         const activity = {
             type: 'request',
             url: params.request.url,
@@ -24,25 +35,21 @@ async function monitorChrome() {
 
     // Monitor page navigations
     Page.loadEventFired(() => {
+        console.log('Page load event');
         const activity = {
             type: 'pageLoad',
             timestamp: new Date().toISOString()
         };
         logActivity(activity);
     });
-
-    // Close the client when done
-    await client.close();
 }
 
 function logActivity(activity) {
     fs.appendFile(activityFile, JSON.stringify(activity) + '\n', err => {
         if (err) {
-            console.error('Failed to log activity:', err);
+            console.error('Error logging activity:', err);
         }
     });
 }
 
-monitorChrome().catch(err => {
-    console.error(err);
-});
+monitorChrome();

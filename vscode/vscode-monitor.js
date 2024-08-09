@@ -12,7 +12,7 @@ function activate(context){
     vscode.workspace.onDidChangeTextDocument(event => {
         const activity = {
             type:'edit',
-            file: event.document.uri.fsPath,
+            file: path.basename(event.document.uri.fsPath),
             timestamp: new Date().toISOString()  // Current timestamp in ISO 8601 format
         };
         logActivity(activity);
@@ -40,7 +40,7 @@ function activate(context){
         if(editor){
             const activity = {
                 type: 'activeEditorChange',
-                file: editor.document.uri.fsPath,
+                file: path.basename(editor.document.uri.fsPath),
                 timestamp: new Date().toISOString()  // Current timestamp in ISO 8601 format
             };
             logActivity(activity);
