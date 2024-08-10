@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "chrome-remote-interface": "^0.33.2"
+  },
+  "scripts": {
+    "start-chrome-monitor": "node chrome-monitor.js"
   }
 }

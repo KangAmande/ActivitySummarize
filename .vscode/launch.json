@@ -13,6 +13,16 @@
                 "${workspaceFolder}/out/**/*.js"
             ],
             "preLaunchTask": "npm: watch"
-        }
+        },
+        {
+            "name": "Launch Chrome Monitor",
+            "type": "node",
+            "request": "launch",
+            "program": "${workspaceFolder}/chrome/chrome-monitor.js",
+            "outFiles": [
+                "${workspaceFolder}/out/**/*.js"
+            ],
+            "console": "integratedTerminal"
+         }
     ]
 }
